@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malda College DCSA | Access Granted</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'matrix-green': '#00ff41',
+                        'electric-blue': '#0070f3',
+                        'dark-void': '#000000',
+                        'alert-red': '#FF4136',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 1.5s ease-in-out infinite alternate',
+                        'pulse-border': 'pulse-border 2.5s infinite ease-out',
+                        'animate-blue-fire': 'blue-fire 0.7s infinite alternate'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { 'box-shadow': '0 0 5px rgba(0, 112, 243, 0.5)' },
+                            '100%': { 'box-shadow': '0 0 20px rgba(0, 112, 243, 0.8), 0 0 30px rgba(0, 112, 243, 0.4)' },
+                        },
+                        'pulse-border': {
+                            '0%': { 'box-shadow': '0 0 0 0 rgba(0, 112, 243, 0.8)' }, 
+                            '70%': { 'box-shadow': '0 0 0 20px rgba(0, 112, 243, 0)' }, 
+                            '100%': { 'box-shadow': '0 0 0 0 rgba(0, 112, 243, 0)' },
+                        },
+                        'blue-fire': {
+                            '0%': { 'box-shadow': '0 0 15px #0070f3, 0 0 30px #0070f3, 0 0 45px #0070f3, 0 0 60px #0070f3' },
+                            '50%': { 'box-shadow': '0 0 20px #0070f3, 0 0 40px #0070f3, 0 0 60px #0070f3, 0 0 80px #0070f3' },
+                            '100%': { 'box-shadow': '0 0 15px #0070f3, 0 0 30px #0070f3, 0 0 45px #0070f3, 0 0 60px #0070f3' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base Dark Background */
+        body {
+            background-color: theme('colors.dark-void');
+            color: white;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+        }
+
+        /* Video Container for Intro Sequence */
+        #intro-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        #intro-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Canvas for background animation */
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Ensure content is readable and above the canvas */
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Neon Text Effect for Headings */
+        .neon-text {
+            text-shadow: 0 0 5px theme('colors.electric-blue'), 0 0 10px theme('colors.electric-blue'), 0 0 15px theme('colors.electric-blue');
+        }
+
+        /* Neon Blue Text Effect */
+        .neon-blue-text {
+            color: theme('colors.electric-blue');
+            text-shadow: 
+                0 0 5px theme('colors.electric-blue'),
+                0 0 15px theme('colors.electric-blue'),
+                0 0 30px rgba(0, 112, 243, 0.6),
+                0 0 45px rgba(0, 112, 243, 0.4);
+            animation: pulse-neon 2s infinite alternate;
+        }
+
+        @keyframes pulse-neon {
+            0% {
+                text-shadow: 
+                    0 0 5px theme('colors.electric-blue'),
+                    0 0 15px theme('colors.electric-blue'),
+                    0 0 30px rgba(0, 112, 243, 0.6),
+                    0 0 45px rgba(0, 112, 243, 0.4);
+            }
+            100% {
+                text-shadow: 
+                    0 0 8px theme('colors.electric-blue'),
+                    0 0 20px theme('colors.electric-blue'),
+                    0 0 40px rgba(0, 112, 243, 0.8),
+                    0 0 60px rgba(0, 112, 243, 0.5);
+            }
+        }
+
+        /* Card Glow */
+        .card-glow {
+            border: 1px solid theme('colors.electric-blue');
+            box-shadow: 0 0 15px rgba(0, 112, 243, 0.5);
+            transition: all 0.3s ease;
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 25px rgba(0, 112, 243, 0.8), 0 0 40px rgba(0, 112, 243, 0.6);
+            transform: translateY(-5px);
+        }
+
+        /* --- START HERE Button Gradient Style --- */
+        .start-here-gradient {
+            background: linear-gradient(180deg, #4b5563 0%, #374151 50%, #1f2937 100%);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 15px theme('colors.matrix-green'), 0 0 5px theme('colors.matrix-green');
+        }
+
+        /* Hover effect for the START HERE button */
+        .start-here-gradient:hover {
+            background: linear-gradient(180deg, #6b7280 0%, #4b5563 50%, #374151 100%);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 25px theme('colors.matrix-green'), 0 0 10px theme('colors.matrix-green');
+            transform: scale(1.02);
+        }
+
+        /* --- Custom Logo FAB Style (Pulsing Neon Blue) --- */
+        .logo-fab-glow {
+            border: 2px solid theme('colors.electric-blue');
+            box-shadow: 0 0 15px theme('colors.electric-blue'), 0 0 30px rgba(0, 112, 243, 0.6);
+            animation: pulse-border 2.5s infinite ease-out; /* Uses the existing pulse-border animation */
+        }
+        .logo-fab-glow:hover {
+            box-shadow: 0 0 20px theme('colors.electric-blue'), 0 0 40px rgba(0, 112, 243, 0.8);
+            animation: none; /* Stop pulsing on hover */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div id="intro-video-container" class="relative">
+        <video id="intro-video" playsinline>
+            <source src="doc.mp4" type="video/mp4">
+            Your browser does support the video tag.
+        </video>
+        <audio id="intro-audio" loop>
+            <source src="doc.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+
+        <button id="start-button" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-100 text-white bg-electric-blue/90 hover:bg-electric-blue px-6 py-3 text-lg sm:px-8 sm:py-4 sm:text-xl rounded-lg font-bold tracking-widest transition duration-300 shadow-xl neon-text animate-pulse-border animate-blue-fire w-fit h-fit">
+            INITIATE ACCESS SEQUENCE
+        </button>
+        
+        <button id="skip-button" class="absolute bottom-10 right-10 z-10 text-white bg-alert-red hover:bg-red-700 px-6 py-2 rounded-lg font-bold transition duration-300 shadow-xl" style="display: none;">
+            Skip Intro (System Override)
+        </button>
+    </div>
+
+    <canvas id="background-canvas"></canvas>
+
+    <div class="content-layer" style="display: none;">
+
+        <header class="p-4 border-b border-electric-blue/50 backdrop-blur-md sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <h1 class="text-xl font-extrabold text-electric-blue tracking-widest neon-text">
+                    MALDA COLLEGE <span class="text-matrix-green/70">DCSA</span>
+                </h1>
+                <nav class="hidden md:flex space-x-6 text-sm">
+                    <a href="#welcome" class="text-gray-300 hover:text-matrix-green transition duration-300">/HOME</a>
+                    <a href="#curriculum" class="text-gray-300 hover:text-matrix-green transition duration-300">/PROGRAMS</a>
+                    <a href="#mission" class="text-gray-300 hover:text-matrix-green transition duration-300">/MISSION</a>
+                    <a href="#contact" class="text-gray-300 hover:text-matrix-green transition duration-300">/CONNECT</a>
+                </nav>
+                <button class="md:hidden text-electric-blue focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+            <section id="welcome" class="text-center pt-16 pb-24 relative overflow-hidden">
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <div class="w-72 h-72 sm:w-96 sm:h-96 bg-electric-blue/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
+                </div>
+
+                <div class="relative z-20">
+                    <p class="text-lg sm:text-xl font-mono mb-4 animate-bounce-in neon-blue-text">
+                        > STATUS: ONLINE | INITIATE SEQUENCE: FRESHERS 2k26
+                    </p>
+                    <h2 class="text-5xl sm:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-tight uppercase neon-text">
+                        <span class="block">Welcome to</span>
+                        <span class="block">DCSA</span>
+                        <span class="text-electric-blue">freshers party</span>
+                    </h2>
+                    <p class="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto mb-10">
+                        You have accessed the central hub for the Department of Computer Science and Applications, Malda College. Your digital journey begins now.
+                    </p>
+                    <a href="#" class="inline-block px-10 py-4 bg-electric-blue text-dark-void font-bold text-lg rounded-full shadow-lg hover:bg-cyan-400 transition duration-300 transform hover:scale-105 animate-glow">
+                        JANUARY 16,2026
+                    </a>
+                </div>
+            </section>
+
+            <section id="curriculum" class="pt-12">
+                <h3 class="text-4xl font-bold text-center mb-16 uppercase tracking-wider text-electric-blue/90">
+                    // CORE MODULES
+                </h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                    <div class="p-6 bg-slate-800/50 rounded-xl card-glow backdrop-blur-sm">
+                        <div class="text-matrix-green mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-9 h-9"><path d="M6 16.5l-2-2.5 2-2.5"/><path d="M12 21v-4"/><path d="M18 16.5l2-2.5-2-2.5"/><path d="M15 21v-8"/><path d="M9 21v-8"/><path d="M12 3v3"/><path d="M8 12h8"/><path d="M15 3h6v4h-6z"/></svg>
+                        </div>
+                        <h4 class="text-2xl font-semibold mb-3 text-electric-blue">Dress code</h4>
+                        <p class="text-gray-400 text-sm">
+                            Celebrate our heritage in style: women are invited in elegant Sarees, while men are encouraged to wear classic Panjabi attire.
+                        </p>
+                        <span class="mt-4 inline-block text-matrix-green text-xs font-mono">STATUS: MANDATORY</span>
+                    </div>
+
+                    <div class="p-6 bg-slate-800/50 rounded-xl card-glow backdrop-blur-sm">
+                        <div class="text-matrix-green mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-9 h-9"><path d="M12 2v20"/><path d="M17 5H7"/><path d="M17 19H7"/><path d="M15 9H9"/><path d="M15 15H9"/></svg>
+                        </div>
+                        <h4 class="text-2xl font-semibold mb-3 text-electric-blue">PLACE</h4>
+                        <p class="text-gray-400 text-sm">
+                            Malda College ,Room No:- 167 ,NEW SCIENCE BUILDING 
+                        </p>
+                        <span class="mt-4 inline-block text-matrix-green text-xs font-mono">STATUS: CONFIRM</span>
+                   
+                    
+                    </div>
+                </div>
+            </section>
+
+            <section id="mission" class="pt-12 bg-slate-900/40 p-10 rounded-2xl shadow-2xl border border-matrix-green/30">
+                <div class="flex flex-col lg:flex-row items-center space-y-8 lg:space-y-0 lg:space-x-12">
+                    <div class="flex-shrink-0 text-matrix-green animate-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16"><path d="M20 7h-2.95a2 2 0 0 1-1.42-.59L12 4l-3.63 2.41a2 2 0 0 1-1.42.59H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold mb-4 text-electric-blue">
+                            <span class="font-mono text-matrix-green">//</span> CORE PROTOCOL
+                        </h3>
+                        <p class="text-gray-300 text-lg">
+                            Our mission is to decode complexity and engineer the future. We are dedicated to translating theoretical knowledge into practical, high-impact digital solutions. Malda DCSA is not just a department; it's a launchpad for **System Architects**, **Code Scientists**, and the next generation of **Tech Innovators**.
+                        </p>
+                        <div class="mt-4 border-l-4 border-matrix-green pl-4">
+                            <p class="text-sm font-mono text-gray-500">
+                                [OBJECTIVE: MAXIMIZE INTELLECTUAL OUTPUT]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="text-center pt-12 pb-8">
+                <h3 class="text-3xl sm:text-4xl font-extrabold mb-4 text-white">
+                    POSTER FORMATION
+                </h3>
+                <p class="text-lg text-gray-400 mb-8">
+                   
+                </p>
+                <a href="https://poster-six-brown.vercel.app/" target="_blank" class="inline-block px-12 py-4 text-matrix-green font-bold text-xl rounded-lg border border-matrix-green/50 transition duration-300 transform start-here-gradient">
+                    <span class="animate-pulse">POSTER ></span>
+                </a>
+            </section>
+
+        </main>
+
+        <footer id="contact" class="mt-24 p-8 border-t border-electric-blue/50 bg-slate-900/60">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+
+                <div>
+                    <h4 class="text-xl font-bold mb-4 text-electric-blue uppercase">DCSA Access Point</h4>
+                    <p class="text-gray-400">
+                        Department of Computer Science and Applications<br>
+                        Malda College, Malda, West Bengal, India.
+                    </p>
+               
+
+               
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-4 text-electric-blue uppercase">connect Links</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://maldacollege.ac.in/" target="_blank" class="text-gray-300 hover:text-matrix-green transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            <span class="sr-only">Server Status</span>
+                        </a>
+                        <a href="https://www.instagram.com/granthadip_x_rez06?igsh=MTBiZm0zZGtpcmdvMg==" target="_blank" class="text-gray-300 hover:text-matrix-green transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            <span class="sr-only">Instagram Profile</span>
+                        </a>
+                        <a href="https://t.me/z9_ALPHA" target="_blank" class="text-gray-300 hover:text-matrix-green transition duration-300">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <title>Telegram icon</title>
+  <path d="M23.91 3.79L20.3 20.84c-.25 1.21-.98 1.5-2 .94l-5.5-4.07-2.66 2.57c-.3.3-.55.56-1.1.56-.72 0-.6-.27-.84-.95L6.3 13.7l-5.45-1.7c-1.18-.35-1.19-1.16.26-1.75l21.26-8.2c.97-.43 1.9.24 1.53 1.73z"/>
+</svg>
+    </a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="text-center mt-12 pt-6 border-t border-gray-700/50">
+                <p class="text-xs text-gray-600 font-mono">
+                    [SYSTEM LOG: DEPT_DCSA | GENERATED: 2026.01.15 | CODEBASE V.4.2]
+                </p>
+            </div>
+        </footer>
+    </div> <a href="https://t.me/addlist/QGc3t_XR4TkzN2Nl" target="_blank" 
+       class="logo-fab-glow fixed bottom-6 right-6 z-50 p-2 bg-dark-void rounded-full transition duration-300 transform hover:scale-110">
+        <img src="logo.png" alt="Profile Logo" class="w-10 h-10 rounded-full object-cover">
+        <span class="sr-only">Profile Link (Telegram Channel)</span>
+    </a>
+
+<script>
+        // --- Canvas Background Animation (Sci-Fi Code Rain) ---
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let columns;
+        let drops = [];
+
+        const FONT_SIZE = 14;
+        const CHARACTERS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+=-{}[]|\\:;"<>,.?/';
+        const RAIN_COLOR = '#00ff41'; // matrix-green
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            columns = Math.floor(width / FONT_SIZE);
+            drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * height / FONT_SIZE);
+            }
+        }
+
+        function animate() {
+            // Fading trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.font = FONT_SIZE + 'px monospace';
+            ctx.fillStyle = RAIN_COLOR;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERS.length));
+                const x = i * FONT_SIZE;
+                const y = drops[i] * FONT_SIZE;
+
+                ctx.fillText(text, x, y);
+
+                if (y > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // --- Video Intro Logic ---
+        const introVideoContainer = document.getElementById('intro-video-container');
+        const introVideo = document.getElementById('intro-video');
+        const introAudio = document.getElementById('intro-audio'); 
+        const skipButton = document.getElementById('skip-button');
+        const startButton = document.getElementById('start-button');
+        const contentLayer = document.querySelector('.content-layer');
+
+        // Flag to prevent multiple transition calls
+        let isTransitioning = false; 
+
+        function cleanupAndTransition() {
+            if (isTransitioning) {
+                return;
+            }
+            isTransitioning = true;
+            
+            // 1. Stop media safely
+            try {
+                if (!introVideo.paused) {
+                    introVideo.pause();
+                }
+                if (!introAudio.paused) {
+                    introAudio.pause();
+                }
+            } catch (e) {
+                console.warn("Error pausing media during cleanup. Continuing transition.", e.message);
+            }
+            
+            // 2. Fade out the video container (using the CSS transition)
+            introVideoContainer.style.opacity = '0'; 
+            
+            // 3. After a short delay, hide the container and show the content layer
+            setTimeout(() => {
+                introVideoContainer.style.display = 'none';
+                contentLayer.style.display = 'block';
+
+                // Ensure canvas is correctly sized and animation is running
+                resizeCanvas();
+                animate();
+
+                isTransitioning = false; // Reset flag after transition is complete
+            }, 500);
+        }
+
+        function startIntroSequence() {
+            startButton.style.display = 'none';
+            skipButton.style.display = 'block';
+
+            introVideo.currentTime = 0;
+            introAudio.currentTime = 0;
+            
+            setTimeout(() => {
+                introVideo.style.opacity = '1'; 
+            }, 50);
+
+            // Play media, handling potential autoplay blocks
+            introVideo.play()
+                .then(() => {
+                    return introAudio.play();
+                })
+                .catch(error => {
+                    const errorName = error.name;
+
+                    if (errorName === 'AbortError' || errorName === 'NotAllowedError') {
+                        console.warn(`Media sequence interrupted or blocked (${errorName}). Transitioning to main content.`);
+                    } else {
+                        console.error("Unexpected media playback error:", error);
+                    }
+                    
+                    cleanupAndTransition(); 
+                });
+        }
+
+        // Attach listeners
+        introVideo.addEventListener('ended', cleanupAndTransition);
+        introVideo.addEventListener('error', cleanupAndTransition);
+        skipButton.addEventListener('click', cleanupAndTransition);
+        startButton.addEventListener('click', startIntroSequence);
+
+        window.addEventListener('resize', () => {
+            if (contentLayer.style.display !== 'none') {
+                resizeCanvas(); 
+            }
+        });
+        
+        // --- INITIAL SETUP ---
+        document.addEventListener('DOMContentLoaded', resizeCanvas); 
+    </script>
+
+</body>
+</html>
